@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Validator test</title>
+	<script type="text/javascript" src="src/jquery-1.11.0.js"></script>
+	<script type="text/javascript" src="src/validator.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var validator = Gp.Validator.configure({validatorSplitter : '&'}).validate('validate');
+		});
+	</script>
+	<style type="text/css">
+		.error {
+			border: 4px solid red;
+		}
+	</style>
+</head>
+<body>
+	<form method="post">
+		<label for="username">Username:</label><input type="text" class="validate" name="username" data-validator="required&length:minLength=5;maxLength=6" data-validator-trigger="blur" data-validator-callback="showError" /></label><br />
+		<label for="number">Number:<input type="text" name="number" class="validate" data-validator="length:minLength=5" data-validator-trigger="keydown" data-validator-callback="showError" /></label><br />
+ 		<input type="submit" />
+	</form>
+</body>
+</html>
