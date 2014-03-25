@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             },
             copy: {
                 files: [ 'src/**', '!src/**/*.styl' ],
-                tasks: [ 'copy', 'test' ]
+                tasks: [ 'build', 'copy', 'test' ]
             }
         },
         connect: {
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
             options : {
                 specs : 'test/**/*Spec.js',
                 helpers : 'test/**/*Helper.js',
-                vendor : 'lib/jquery-1.11.0.js'
+                vendor : 'lib/**/*.js'
             }
        },
        jshint : {

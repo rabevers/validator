@@ -23,7 +23,7 @@
  *
  */
 
-var Gp   = {}
+var Gp = {}
 
 Gp.Validator    = (function(){
 
@@ -66,6 +66,16 @@ Gp.Validator    = (function(){
     }
 
     /**
+     * http://stackoverflow.com/questions/14478914/javascript-dynamic-function-calls-with-namespace
+     */
+    function _callCustomValidator(path, params)
+    {
+        return [window].concat(path.split('.')).reduce(function(prev, curr) {
+            return prev[curr];
+        });
+    }
+
+    /**
      * Setup the validators and hook them up to the requested event
      * @param element
      * @param trigger
@@ -90,8 +100,12 @@ Gp.Validator    = (function(){
                     argumentObject   = _parseValidatorArgumentString(validatorParts[1])
                 }
                 var result;
-                if (Gp.Validators[validatorParts[0]]){
+                if (_callCustomValidator(validatorParts[0]) && typeof _callCustomValidator(validatorParts[0]).validate === 'function'){
+                    result      = _callCustomValidator(validatorParts[0]).validate(element, argumentObject);
+                }else if (Gp.Validators[validatorParts[0]]){
                     result      = Gp.Validators[validatorParts[0]].validate(element, argumentObject);
+                }else{
+                    throw new Error('Validator ' + validatorParts[0] + ' not found.');
                 }
                 // Fetch the callback function name
                 var callback    = element.data('validator-callback');
@@ -226,21 +240,3 @@ Gp.Validators   = {
         }
     }
 };
-
-/**
- * Callback method to handle the errors, they're no good if we don't do anything with them.
- * @param element
- * @param message
- */
-function showError(element, result)
-{
-    if (result.isValid === false){
-        element.addClass('error');
-        for (var message in result.messages){
-            console.log(result.validator + " >> " + message);
-        }
-    }else{
-        element.removeClass('error');
-        console.log(result.validator + " >> " + 'element valid');
-    }
-}

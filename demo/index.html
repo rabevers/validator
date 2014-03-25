@@ -3,11 +3,39 @@
 <head>
 	<title>Validator test</title>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script type="text/javascript" src="../build/validator-min.js"></script>
+	<script type="text/javascript" src="tstValidators.js"></script>
+	<script type="text/javascript" src="../build/validator.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var validator = Gp.Validator.configure({validatorSplitter : '&'}).validate('validate');
-		});
+        });
+
+
+        /**
+         * Callback method to handle the errors, they're no good if we don't do anything with them.
+         * @param element
+         * @param message
+         */
+        function showError(element, result)
+        {
+            if (result.isValid === true){
+                element.removeClass('error');
+                console.log('====================VALID=========================');
+                console.log(element);
+                console.log(result);
+                console.log('isValid = true');
+                console.log('==================================================');
+            }else{
+                element.addClass('error');
+                for (var message in result.messages){
+                    console.log('=================INVALID==========================');
+                    console.log(element);
+                    console.log(result);
+                    console.log(result.validator + " >>> " + message);
+                    console.log('==================================================');
+                }
+            }
+        }
 	</script>
 	<style type="text/css">
 		.error {
@@ -39,6 +67,15 @@
                 <td>
                     <ul>
                         <li>length:minLength</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="number">Number:</label></td>
+                <td><input type="text" name="number" class="validate" data-validator="Tst.required" data-validator-trigger="blur" data-validator-callback="showError" /></td>
+                <td>
+                    <ul>
+                        <li>required from Tst namespace</li>
                     </ul>
                 </td>
             </tr>
