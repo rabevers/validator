@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Validator test</title>
-	<script type="text/javascript" src="../lib/jquery-1.11.0.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../build/validator-min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -16,9 +16,33 @@
 	</style>
 </head>
 <body>
-	<form method="post">
-		<label for="username">Username:</label><input type="text" class="validate" name="username" data-validator="required&length:minLength=5;maxLength=6" data-validator-trigger="blur" data-validator-callback="showError" /></label><br />
-		<label for="number">Number:<input type="text" name="number" class="validate" data-validator="length:minLength=5" data-validator-trigger="keydown" data-validator-callback="showError" /></label><br />
+    <form method="post">
+        <table>
+            <tr>
+                <td>
+            		<label for="username">Username:</label>
+                </td>
+                <td>
+                    <input type="text" class="validate" name="username" data-validator="required&length:minLength=5;maxLength=6" data-validator-trigger="blur" data-validator-callback="showError" />
+                </td>
+                <td>
+                    <ul>
+                        <li>required</li>
+                        <li>length:minLength</li>
+                        <li>length:maxLength</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="number">Number:</label></td>
+                <td><input type="text" name="number" class="validate" data-validator="length:minLength=5" data-validator-trigger="keydown" data-validator-callback="showError" /></td>
+                <td>
+                    <ul>
+                        <li>length:minLength</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
  		<input type="submit" />
 	</form>
 </body>
