@@ -36,9 +36,9 @@ describe("Validators tests", function(){
     });
 
     /**
-     * Test if the length validator returns false if a minLength
-     * property has been specified, but the actual length of the 
-     * string passed was less.
+     * Test if the length validator returns true if a minLength
+     * property has been specified, and the actual length of the 
+     * string passed exactly matches the minLength specified.
      * A maxLength was not specified in this test
      */
     it ("length returns false for value length < minLength", function(){
@@ -51,7 +51,7 @@ describe("Validators tests", function(){
     /**
      * Test if the length validator returns true if a minLength
      * property has been specified, and the actual length of the 
-     * string passed exactly matches the minLength specified.
+     * string passed was exactly the minLength specified.
      * A maxLength was not specified in this test
      */
     it ("length returns true for value length == minLength", function(){
