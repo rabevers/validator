@@ -45,4 +45,3 @@ For now you can just add it to the ```Gp.Validators``` namespace. In the future 
 
 ## Roadmap
 * Create an adapter setup so _Validator_ is no longer dependant on jQuery. You should be able to use whatever library you choose.
-* Allow for using custom validators in another namespace. Placing additional validators in the ```Gp.Validators``` namespace might cause naming conflicts.
