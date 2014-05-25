@@ -241,6 +241,36 @@ Gp.Validators   = {
     },
 
     regexp : {
+
+        messages : {
+            notValid    : "Value doesn't match pattern"
+        },
+
+        validate    : function(element, settings){
+            var isValid = false,
+                returnObject    = {},
+                pattern         = new RegExp(settings.regexp)
+            ;
+
+            console.log( pattern.toString() );
+            console.log( element.val() );
+
+            var value   = element.val();
+            if ( pattern.test(value) === true ){
+                return {
+                    isValid     : true,
+                    validator   : 'regexp'
+                }
+            }
+            return {
+                isValid     : false,
+                validator   : 'regexp',
+                messages    : {
+                    inValid : this.messages.notvalid
+                }
+            }
+        }
+
     }
 };
 

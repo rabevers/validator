@@ -2,9 +2,26 @@
 <html>
 <head>
 	<title>Validator test</title>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        .has-feedback .form-control-feedback {
+            z-index : 9 !important;
+            top: 0 !important;
+        }
+    </style>
+
 	<script type="text/javascript" src="tstValidators.js"></script>
-	<script type="text/javascript" src="../build/validator.js"></script>
+	<script type="text/javascript" src="../build/validator-min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var validator = Gp.Validator.configure({validatorSplitter : '&'}).validate('validate');
@@ -19,21 +36,34 @@
         function showError(element, result)
         {
             if (result.isValid === true){
-                element.removeClass('error');
-                console.log('====================VALID=========================');
-                console.log(element);
-                console.log(result);
-                console.log('isValid = true');
-                console.log('==================================================');
-            }else{
-                element.addClass('error');
-                for (var message in result.messages){
-                    console.log('=================INVALID==========================');
-                    console.log(element);
-                    console.log(result);
-                    console.log(result.validator + " >>> " + message);
-                    console.log('==================================================');
+                var formGroup   = $(element).closest('.form-group').removeClass('has-error').addClass('has-feedback');
+                formGroup.find('ul.errors').remove();
+                console.log('success');
+                if ( formGroup.find('span.form-control-feedback').length > 0){
+                    // Feedback exists, alter it
+                    formGroup.find('span.form-control-feedback i.fa').removeClass('fa-times').addClass('fa-check');
+                    console.log('altering feedback');
+                }else{
+                    // Feedback does not exist, add it
+                    formGroup.find('div.input-group').append($('<span class="form-control-feedback">').append( $('<i class="fa fa-check">') ) );
+                    console.log('Adding feedback');
                 }
+                var formGroup = $(element).closest('.form-group').addClass('has-success').addClass('has-feedback');
+            }else{
+                var formGroup = $(element).closest('.form-group').addClass('has-error').addClass('has-feedback');
+                formGroup.find('ul.errors').remove();
+                if ( formGroup.find('span.form-control-feedback').length > 0 ){
+                    // Feedback exists, alter it
+                    formGroup.find('span.form-control-feedback i.fa').removeClass('fa-check').addClass('fa-times');
+                }else{
+                    // Feedback does not exist, add it
+                    formGroup.find('div.input-group').append($('<span class="form-control-feedback">').append( $('<i class="fa fa-times">') ) );
+                }
+                var errorsList = $('<ul class="errors">');
+                for (var message in result.messages){
+                    $(errorsList).append($('<li>' + message + '</li>'));
+                }
+                formGroup.append(errorsList);
             }
         }
 	</script>
@@ -44,43 +74,74 @@
 	</style>
 </head>
 <body>
-    <form method="post">
-        <table>
-            <tr>
-                <td>
-            		<label for="username">Username:</label>
-                </td>
-                <td>
-                    <input type="text" class="validate" name="username" data-validator="required&length:minLength=5;maxLength=6" data-validator-trigger="blur" data-validator-callback="showError" />
-                </td>
-                <td>
-                    <ul>
-                        <li>required</li>
-                        <li>length:minLength</li>
-                        <li>length:maxLength</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="number">Number:</label></td>
-                <td><input type="text" name="number" class="validate" data-validator="length:minLength=5" data-validator-trigger="keydown" data-validator-callback="showError" /></td>
-                <td>
-                    <ul>
-                        <li>length:minLength</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="number">Number:</label></td>
-                <td><input type="text" name="number" class="validate" data-validator="Tst.required" data-validator-trigger="blur" data-validator-callback="showError" /></td>
-                <td>
-                    <ul>
-                        <li>required from Tst namespace</li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
- 		<input type="submit" />
-	</form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" class="form-control validate" name="username" data-validator="required&length:minLength=5;maxLength=6" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>required</li>
+                    <li>length:minLength = 5</li>
+                    <li>length:maxLength = 6</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="number">Number:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" name="number" class="form-control validate" data-validator="length:minLength=5" data-validator-trigger="keydown" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>length:minLength</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="number">Number:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" name="number" class="form-control validate" data-validator="Tst.required" data-validator-trigger="blur" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>required from Tst namespace</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="regexp">RegExp:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" id="regexp" name="regexp" class="form-control validate" data-validator="regexp:regexp=^abc$" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>RegExp, \^abc$\</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
