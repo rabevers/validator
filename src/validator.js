@@ -238,6 +238,9 @@ Gp.Validators   = {
                 validator: 'length'
             };
         }
+    },
+
+    regexp : {
     }
 };
 
