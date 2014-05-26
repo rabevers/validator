@@ -74,6 +74,11 @@ describe("Validators tests", function(){
         expect(result.isValid).toBe(true);
     });
 
+    /**
+     * Test if the length validator returns false if the length of the 
+     * value exceeds the length specified by the maxLength property.
+     * A minLength property was not set for this test.
+     */
     it ("length returns false for value length > maxLength", function(){
         var el  = $('<input type="text" /> ');
         el.val('test');
@@ -81,6 +86,11 @@ describe("Validators tests", function(){
         expect(result.isValid).toBe(false);
     });
 
+    /**
+     * Test if the length validator returs true if the length of the 
+     * value exactly matches that specified by the maxLength property.
+     * A minLength property was not set for this test.
+     */
     it ("length returns true for value length == maxLength", function(){
         var el  = $('<input type="text" /> ');
         el.val('te');
@@ -88,6 +98,11 @@ describe("Validators tests", function(){
         expect(result.isValid).toBe(true);
     });
 
+    /**
+     * Test if the length validator returns true if the length of the 
+     * value is smaller than specified by the maxLength property.
+     * A minLength property was not set for this test.
+     */
     it ("length returns true for value length < maxLength", function(){
         var el  = $('<input type="text" /> ');
         el.val('t');
@@ -95,4 +110,40 @@ describe("Validators tests", function(){
         expect(result.isValid).toBe(true);
     });
 
+    /**
+     * Test if the length validator returns true if the length of the 
+     * value is smaller than specified by the maxLength property.
+     * A minLength property was not set for this test.
+     */
+    it ("length returns true for value length < maxLength && > minLength", function(){
+        var el  = $('<input type="text" /> ');
+        el.val('tes');
+        var result  = Gp.Validators.length.validate(el, {maxLength: 5, minLength : 2});
+        expect(result.isValid).toBe(true);
+    });
+    
+    /**
+     * Test if the length validator returns false if the length of the 
+     * value is higher than specified by the maxLength property.
+     * A minLength property was set for this test.
+     */
+    it ("length returns true for value length < maxLength && > minLength", function(){
+        var el  = $('<input type="text" /> ');
+        el.val('test test');
+        var result  = Gp.Validators.length.validate(el, {maxLength: 5, minLength : 2});
+        expect(result.isValid).toBe(true);
+    });
+    
+    /**
+     * Test if the length validator returns false if the length of the 
+     * value is lower than specified by the minLength property.
+     * A maxLength property was set for this test.
+     */
+    it ("length returns true for value length < maxLength && > minLength", function(){
+        var el  = $('<input type="text" /> ');
+        el.val('t');
+        var result  = Gp.Validators.length.validate(el, {maxLength: 5, minLength : 2});
+        expect(result.isValid).toBe(true);
+    });
+    
 });

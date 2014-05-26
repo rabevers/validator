@@ -23,7 +23,7 @@
  *
  */
 
-var Gp = {}
+var Gp = window.Gp || {};
 
 Gp.Validator    = (function(){
 
@@ -40,7 +40,6 @@ Gp.Validator    = (function(){
      * Parse the validator string to determine which validators should be called
      * @param validatorString
      * @private
-     * @todo make the split character configurable
      */
     function _parseValidatorString(validatorString)
     {
@@ -56,10 +55,16 @@ Gp.Validator    = (function(){
      */
     function _parseValidatorArgumentString(validatorArgumentString)
     {
+        // Split the validator arguments
         var arr = validatorArgumentString.split(';');
-        var parsedData = {};
+        // Initialize an empty object for the various argument parts
+        var parsedData = [];
+
+        // Loop all the parts
         for (var i = 0; i < arr.length; i++) {
+            // Split them into a key and value
             var keyValueArray   = arr[i].split("=");
+            // Add them to the 
             parsedData[keyValueArray[0]] = keyValueArray[1];
         }
         return parsedData;
