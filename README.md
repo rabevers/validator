@@ -3,7 +3,7 @@ _Validator_ is a client-side javascript form validation system. It aims to have 
 
 So far a javascript function is only used to handle the actual displaying of validation results. I say validation results and not errors since you could display information on success as well.
 
-Please keep in mind that _Validator_ is still on **alpha status**. I haven't worked everything out yet and things may change as I get better insights.
+Please keep in mind that _Validator_ is on **beta status**. It has not yet been extensively tested.
 
 ##Usage
 
@@ -32,7 +32,14 @@ In this example ```validate``` is the class name provided to _Validator_. Other 
 * data-validator-callback, a callback function to display the validation results
 
 ### data-validator
-TODO
+The data-validator attribute specifies which validations should be perfomed and what parameters should be used.
+```html
+data-validator="required&length:minLength=5;maxLength=6"
+```
+Validators are seperated by the & character. A different character can be set by calling the configure method and passing in an object literal like so ```.configure({validatorSplitter : '&'})```.
+
+in the above example a required and length validator are added. The required validator doesn take any extra arguments. The length on the other hand has two. A minLength and a maxLength argument. The arguments are seperated by a ```;```, argument values are assigned with a ```=```.
+
 ### data-validator-trigger
 This is the event on which _Validator_ should start validation. For now it is the same as the jQuery events you would use in the ```.bind()``` function.
 
@@ -41,7 +48,13 @@ This attribute must contain the name of a funtion in the global namespace. This 
 
 ## Custom validators
 Since there is no way for me to add validators for everyones need, there is an option to add your own.
-For now you can just add it to the ```Gp.Validators``` namespace. In the future I would like to add an option of keeping them in your own namespace to avoid any naming conflicts. 
 
+You can add it to the ```Gp.Validators``` namespace. Or better yet you can create your own namspace and use that.
+If you create your own namespace you can use it as demonstrated below.
+
+```html
+<input type="text" name="number" class="validate" data-validator="Tst.required" data-validator-trigger="blur" data-validator-callback="showError" />
+```
+In this example the required validator from the Tst namespace is used to validate the field on the blur event.
 ## Roadmap
 * Create an adapter setup so _Validator_ is no longer dependant on jQuery. You should be able to use whatever library you choose.
