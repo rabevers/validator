@@ -131,7 +131,7 @@ describe("Validators tests", function(){
         var el  = $('<input type="text" /> ');
         el.val('test test');
         var result  = Gp.Validators.length.validate(el, {maxLength: 5, minLength : 2});
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
     });
     
     /**
@@ -143,7 +143,7 @@ describe("Validators tests", function(){
         var el  = $('<input type="text" /> ');
         el.val('t');
         var result  = Gp.Validators.length.validate(el, {maxLength: 5, minLength : 2});
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
     });
     
 });

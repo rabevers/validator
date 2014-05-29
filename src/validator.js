@@ -4,19 +4,27 @@
  * Time: 12:45
  *
  * Concept
- * Validate input fields, We should be able to identify a form for which each field should be validated or we should be
- * able to validate all input fields with a specific class. Perhaps we can do both at once.
- * The validations should be either in html as data-type attributes or declarative through javascript. html will be
- * step one.
- * Programmers should be able to add custom validators just by loading the validator, specifically adding them should
- * not be required (convention over configuration)
+ * Validate input fields, We should be able to identify a form for which 
+ * each field should be validated or we should be able to validate all 
+ * input fields with a specific class. Perhaps we can do both at once.
+ *
+ * The validations should be either in html as data-type attributes or 
+ * declarative through javascript. html will be step one.
+ *
+ * Programmers should be able to add custom validators just by loading 
+ * the validator, specifically adding them should not be required (convention 
+ * over configuration).
+ *
  * Invalid values should be handled in one of several ways.
- * - Add a class and a custom html element which can be filled with an error message from the validator
- * - A programmer specified callback function (both for javascript as well as html data elements)
+ * - Add a class and a custom html element which can be filled with 
+ *   an error message from the validator
+ * - A programmer specified callback function (both for javascript as 
+ *   well as html data elements)
  *
  * Notes:
- * We will have a dependency for JQuery though we will not create a JQuery plugin. Eventually I would like to abstract
- * the need for JQuery so adapters for other libraries can be added.
+ * We will have a dependency for JQuery though we will not create a JQuery 
+ * plugin. Eventually I would like to abstract the need for JQuery so adapters 
+ * for other libraries can be added.
  *
  * @todo create adapter system so there is no reliance on just jQuery
  * @todo allow for validator declaration using javascript instead of data attributes
@@ -131,9 +139,17 @@ Gp.Validator    = (function(){
          * Find all elements with the provided class name and setup validations as they were specified
          * @param className
          */
-        validate    : function(className)
+        validate    : function(className, containerId)
         {
-            $('.' + className).each(function(index, element){
+            /**
+             * Check to see if we should only target elements
+             * in a specific container.
+             */
+            var containerString = '';
+            if (containerId){
+                containerString = '#' + containerId + ' ';
+            }
+            $(containerString + '.' + className).each(function(index, element){
                 if (element.tagName == 'form'){
                     /**
                      * Handle all elements, that have been defined in 'availableInputTypes' in the form.
@@ -159,6 +175,10 @@ Gp.Validator    = (function(){
                     _setupValidation(element, trigger, validationInformation);
                 }
             });
+        },
+
+        validateContainer : function(containerId, className){
+//            $('#' + containerId + className)
         },
 
         /**
