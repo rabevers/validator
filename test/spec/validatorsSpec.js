@@ -146,4 +146,18 @@ describe("Validators tests", function(){
         expect(result.isValid).toBe(false);
     });
     
+    it ("rexexp returns false if the string is not matched", function(){
+        var el  = $('<input type="text" /> ');
+        el.val('cba');
+        var result  = Gp.Validators.regexp.validate(el, {regexp : '^abc$'});
+        expect(result.isValid).toBe(false);
+    });
+
+    it ("rexexp returns true if the string is matched", function(){
+        var el  = $('<input type="text" /> ');
+        el.val('abc');
+        var result  = Gp.Validators.regexp.validate(el, {regexp : '^abc$'});
+        expect(result.isValid).toBe(true);
+    });
+
 });
