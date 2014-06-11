@@ -3,6 +3,8 @@ module.exports = function(grunt) {
     // configure the tasks
     grunt.initConfig({
 
+        pkg: grunt.file.readJSON('package.json'),
+
         copy: {
             build: {
                 cwd: 'src',
@@ -81,6 +83,7 @@ module.exports = function(grunt) {
                     hostname: '*'
                 }}
        },
+
        jasmine: {
             src : 'src/**/*.js',
             options : {
@@ -88,18 +91,33 @@ module.exports = function(grunt) {
                 helpers : 'test/**/*Helper.js',
                 vendor : 'lib/**/*.js'
             }
-       },
-       jshint : {
-        all : [
-            "Gruntfile.js",
-            "test/spec/*.js",
-            "src/**/*.js"
-        ],
-        options : {
-            jshintrc : '.jshintrc'
+        },
+
+        jshint : {
+            all : [
+                "Gruntfile.js",
+                "test/spec/*.js",
+                "src/**/*.js"
+            ],
+            options : {
+                jshintrc : '.jshintrc'
+            }
+        },
+   
+        yuidoc: {
+            compile: {
+                name        : '<%= pkg.name %>',
+                description : '<%= pkg.description %>',
+                version     : '<%= pkg.version %>',
+                url         : '<%= pkg.homepage %>',
+                options: {
+                    paths: 'src/',
+                    outdir: 'docs/'
+                }
+            }
         }
-       }
     });
+
 
     // load the tasks
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -112,6 +130,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
     // define the tasks
     grunt.registerTask(

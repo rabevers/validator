@@ -15,12 +15,8 @@
  * the validator, specifically adding them should not be required (convention 
  * over configuration).
  *
- * Invalid values should be handled in one of several ways.
- * - Add a class and a custom html element which can be filled with 
- *   an error message from the validator
- * - A programmer specified callback function (both for javascript as 
- *   well as html data elements)
- *
+ * Invalid values should be handled by programmer specified callback functions 
+ * 
  * Notes:
  * We will have a dependency for JQuery though we will not create a JQuery 
  * plugin. Eventually I would like to abstract the need for JQuery so adapters 
@@ -31,23 +27,43 @@
  *
  */
 
+/**
+ * @namespace Gp
+ */
 var Gp = window.Gp || {};
 
+/**
+ * @namespace Gp.Validator
+ * @module Validator
+ */
 Gp.Validator    = (function(){
 
     // private members
     /**
      * For later use, a list of all the input types we can (or are allowed to) validate
      * @type {Array}
+     * @property
+     * @private
      */
     var availableInputTypes = ['input', 'textarea'],
+
+        /**
+         *
+         */
         validatorParts,
+
+        /**
+         * @private
+         * @property
+         * @type {string}
+         */
         validatorStringSplitCharacter   = '&';
 
     /**
      * Parse the validator string to determine which validators should be called
-     * @param validatorString
+     * @param {string} validatorString 
      * @private
+     * @return {Array}
      */
     function _parseValidatorString(validatorString)
     {
@@ -80,6 +96,9 @@ Gp.Validator    = (function(){
 
     /**
      * http://stackoverflow.com/questions/14478914/javascript-dynamic-function-calls-with-namespace
+     * @private
+     * @param {string} path
+     * @param {mixed} params NOT YET USED!
      */
     function _callCustomValidator(path, params)
     {
@@ -133,11 +152,15 @@ Gp.Validator    = (function(){
     }
 
     // public members
+    /**
+     * @public
+     */
     return {
 
         /**
          * Find all elements with the provided class name and setup validations as they were specified
          * @param className
+         * @public
          */
         validate    : function(className, containerId)
         {
@@ -162,9 +185,14 @@ Gp.Validator    = (function(){
                      * Handle individual elements
                      */
 
-                    var trigger = $(element).data('validator-trigger');
-                    if (!trigger){
+                    var triggers = $(element).data('validator-trigger');
+                    if (!triggers){
                         throw new Error('No trigger for element validation, without a trigger validation will not occur.');
+                    }else{
+                        /**
+                         * A trigger has been defined, split the string to see how many
+                         */
+                        triggers    = triggers.split(",");
                     }
 
                     // Determine what should be validated
@@ -172,13 +200,12 @@ Gp.Validator    = (function(){
                     if (!validationInformation){
                         throw new Error('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element');
                     }
-                    _setupValidation(element, trigger, validationInformation);
+
+                    for (var x=0; x<triggers.length; x++){
+                        _setupValidation(element, triggers[x].trim(), validationInformation);
+                    }
                 }
             });
-        },
-
-        validateContainer : function(containerId, className){
-//            $('#' + containerId + className)
         },
 
         /**
@@ -198,6 +225,9 @@ Gp.Validator    = (function(){
 
 })();
 
+/**
+ * @namespace Gp.Validators
+ */
 Gp.Validators   = {
 
     /**

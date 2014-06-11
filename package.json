@@ -1,21 +1,22 @@
 {
-    "name" : "Validator",
-    "version" : "0.0.1",
-    "author" : "Richard A. Bevers",
-    "private" : true,
-
-    "devDependencies" : {
-        "grunt" :                   "~0.4.0",
-        "grunt-contrib-cssmin" :         "*",
-        "grunt-contrib-uglify" :         "*",
-        "grunt-contrib-watch" :          "*",
-        "grunt-contrib-stylus" :         "*",
-        "grunt-contrib-copy" :           "*",
-        "grunt-autoprefixer" :           "*",
-        "grunt-contrib-cssmin" :         "*",
-        "grunt-contrib-clean" :          "*",
-        "grunt-contrib-connect" :        "*",
-        "grunt-contrib-jasmine":         "*",
-        "grunt-contrib-jshint":          "*"
-    } 
+  "name": "Validator",
+  "version": "0.1.1",
+  "author": "Richard A. Bevers",
+  "private": true,
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-autoprefixer": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-jasmine": "*",
+    "grunt-contrib-jshint": "*"
+  },
+  "dependencies": {
+    "grunt-contrib-yuidoc": "^0.5.2"
+  }
 }
