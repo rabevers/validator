@@ -38,15 +38,15 @@
             if (result.isValid === true){
                 var formGroup   = $(element).closest('.form-group').removeClass('has-error').addClass('has-feedback');
                 formGroup.find('ul.errors').remove();
-                console.log('success');
+//                console.log('success');
                 if ( formGroup.find('span.form-control-feedback').length > 0){
                     // Feedback exists, alter it
                     formGroup.find('span.form-control-feedback i.fa').removeClass('fa-times').addClass('fa-check');
-                    console.log('altering feedback');
+//                    console.log('altering feedback');
                 }else{
                     // Feedback does not exist, add it
                     formGroup.find('div.input-group').append($('<span class="form-control-feedback">').append( $('<i class="fa fa-check">') ) );
-                    console.log('Adding feedback');
+//                    console.log('Adding feedback');
                 }
                 var formGroup = $(element).closest('.form-group').addClass('has-success').addClass('has-feedback');
             }else{
@@ -160,6 +160,75 @@
                 </ul>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="zipcode">ZipCode:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" id="zipcode" name="zipcode" class="form-control validate" data-validator="zipcode" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>Zipcode</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="emailaddress">Emailaddress:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" id="emailaddress" name="emailaddress" class="form-control validate" data-validator="emailaddress" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>Emailaddress</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="hostname">Hostname:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" id="hostname" name="hostname" class="form-control validate" data-validator="hostname" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>Hostname</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="iban">IBAN:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" id="hostname" name="iban" class="form-control validate" data-validator="iban" data-validator-trigger="keyup" data-validator-callback="showError" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    <li>Iban</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
 </body>

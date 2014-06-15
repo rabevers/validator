@@ -187,7 +187,8 @@ Gp.Validator    = (function(){
 
                     var triggers = $(element).data('validator-trigger');
                     if (!triggers){
-                        throw new Error('No trigger for element validation, without a trigger validation will not occur.');
+                        return false;
+                        //throw new Error('No trigger for element validation, without a trigger validation will not occur.');
                     }else{
                         /**
                          * A trigger has been defined, split the string to see how many
@@ -198,7 +199,8 @@ Gp.Validator    = (function(){
                     // Determine what should be validated
                     var validationInformation   = $(element).data('validator');
                     if (!validationInformation){
-                        throw new Error('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element');
+                        return false;
+                        //throw new Error('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element');
                     }
 
                     for (var x=0; x<triggers.length; x++){
@@ -307,9 +309,6 @@ Gp.Validators   = {
                 pattern         = new RegExp(settings.regexp)
             ;
 
-            console.log( pattern.toString() );
-            console.log( element.val() );
-
             var value   = element.val();
             if ( pattern.test(value) === true ){
                 return {
@@ -326,6 +325,141 @@ Gp.Validators   = {
             }
         }
 
-    }
+    },
+
+    zipcode : {
+
+        messages : {
+            notValid    : "Value is not a zipcode"
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : 'zipcode'
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : 'zipcode',
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+
+        }
+    },
+
+    phonenumber : {
+
+        messages : {
+            notValid    : "Value is not a phone number"
+        },
+
+        validate : function(element){
+            return {
+                isValid : true,
+                validator : 'phonenumber'
+            }
+        }
+    },
+
+    emailaddress : {
+
+        messages : {
+            notValid    : "Value is not a valid email address"
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : 'emailaddress'
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : 'emailaddress',
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+
+        }
+    },
+
+    hostname : {
+
+        messages : {
+            notValid    : "Value is not a valid hostname"
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/
+            }
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : 'hostname'
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : 'hostname',
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+        }
+    },
+
+    iban : {
+
+        messages : {
+            notValid    : "Value is not a valid IBAN"
+        },
+
+        validate : function(element){
+            // https://mxforum.mendix.com/questions/5257/Regex--separated-IBAN
+            settings = {
+                regexp : /[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}/
+//                regexp : /^((NO)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(NO)[0-9A-Z]{13}|(BE)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(BE)[0-9A-Z]{14}|(DK|FO|FI|GL|NL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(DK|FO|FI|GL|NL)[0-9A-Z]{16}|(MK|SI)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(MK|SI)[0-9A-Z]{17}|(BA|EE|KZ|LT|LU|AT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(BA|EE|KZ|LT|LU|AT)[0-9A-Z]{18}|(HR|LI|LV|CH)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{1}|(HR|LI|LV|CH)[0-9A-Z]{19}|(BG|DE|IE|ME|RS|GB)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(BG|DE|IE|ME|RS|GB)[0-9A-Z]{20}|(GI|IL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(GI|IL)[0-9A-Z]{21}|(AD|CZ|SA|RO|SK|ES|SE|TN)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(AD|CZ|SA|RO|SK|ES|SE|TN)[0-9A-Z]{22}|(PT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{1}|(PT)[0-9A-Z]{23}|(IS|TR)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(IS|TR)[0-9A-Z]{24}|(FR|GR|IT|MC|SM)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(FR|GR|IT|MC|SM)[0-9A-Z]{25}|(AL|CY|HU|LB|PL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(AL|CY|HU|LB|PL)[0-9A-Z]{26}|(MU)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(MU)[0-9A-Z]{28}|(MT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(MT)[0-9A-Z]{29})$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : 'hostname'
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : 'hostname',
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+        }
+
+    },
+
 };
 
