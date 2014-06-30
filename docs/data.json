@@ -1,0 +1,482 @@
+{
+    "project": {
+        "name": "Validator",
+        "description": "",
+        "version": "0.1.1",
+        "url": ""
+    },
+    "files": {
+        "src/validator.js": {
+            "name": "src/validator.js",
+            "modules": {
+                "Validator": 1
+            },
+            "classes": {
+                "Gp.Validators.required": 1,
+                "Gp.Validators.length": 1,
+                "Gp.Validators.regexp": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "Gp": 1,
+                "Gp.Validators": 1
+            }
+        }
+    },
+    "modules": {
+        "Validator": {
+            "name": "Validator",
+            "submodules": {},
+            "classes": {
+                "Gp.Validators.required": 1,
+                "Gp.Validators.length": 1,
+                "Gp.Validators.regexp": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "Gp": 1,
+                "Gp.Validators": 1
+            },
+            "tag": "module",
+            "file": "src/validator.js",
+            "line": 343,
+            "author": "Richard A. Bevers <richard.bevers@gmail.com>\nDate: 25-1-14\nTime: 12:45\n\nConcept\nValidate input fields, We should be able to identify a form for which \neach field should be validated or we should be able to validate all \ninput fields with a specific class. Perhaps we can do both at once.\n\nThe validations should be either in html as data-type attributes or \ndeclarative through javascript. html will be step one.\n\nProgrammers should be able to add custom validators just by loading \nthe validator, specifically adding them should not be required (convention \nover configuration).\n\nInvalid values should be handled by programmer specified callback functions \n\nNotes:\nWe will have a dependency for JQuery though we will not create a JQuery \nplugin. Eventually I would like to abstract the need for JQuery so adapters \nfor other libraries can be added.",
+            "todo": [
+                "create adapter system so there is no reliance on just jQuery",
+                "allow for validator declaration using javascript instead of data attributes"
+            ]
+        }
+    },
+    "classes": {
+        "Gp.Validators.required": {
+            "name": "Gp.Validators.required",
+            "shortname": "required",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Validator",
+            "namespace": "Gp.Validators",
+            "file": "src/validator.js",
+            "line": 248,
+            "description": "Validator to indicate a value is required."
+        },
+        "Gp.Validators.length": {
+            "name": "Gp.Validators.length",
+            "shortname": "length",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Validator",
+            "namespace": "Gp.Validators",
+            "file": "src/validator.js",
+            "line": 286,
+            "description": "Length validator, can check for a minimum length, a maximum length or both.",
+            "todo": [
+                "allow for messages to be changed"
+            ]
+        },
+        "Gp.Validators.regexp": {
+            "name": "Gp.Validators.regexp",
+            "shortname": "regexp",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Validator",
+            "namespace": "Gp.Validators",
+            "file": "src/validator.js",
+            "line": 343
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/validator.js",
+            "line": 32,
+            "class": "Gp.Validators.required",
+            "module": "Validator",
+            "namespace": "Gp"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 44,
+            "description": "For later use, a list of all the input types we can (or are allowed to) validate",
+            "type": "{Array}",
+            "itemtype": "property",
+            "name": "availableInputTypes",
+            "access": "private",
+            "tagname": "",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 52,
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "validatorParts",
+            "type": "{array}",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 59,
+            "description": "Character used to seperate the various validators that should be used",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "validatorStringSplitCharacter",
+            "type": "{string}",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 68,
+            "description": "Parse the validator string to determine which validators should be called",
+            "params": [
+                {
+                    "name": "validatorString",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_parseValidatorString",
+            "return": {
+                "description": "",
+                "type": "Array"
+            },
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 81,
+            "description": "Take the argument string and convert it into an object which, in turn, we can pass to the validator",
+            "params": [
+                {
+                    "name": "validatorArgumentString",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "Object"
+            },
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_parseValidatorArgumentString",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 105,
+            "description": "http://stackoverflow.com/questions/14478914/javascript-dynamic-function-calls-with-namespace",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_callCustomValidator",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "description": "NOT YET USED!",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 119,
+            "description": "Setup the validators and hook them up to the requested event",
+            "params": [
+                {
+                    "name": "element",
+                    "description": ""
+                },
+                {
+                    "name": "trigger",
+                    "description": ""
+                },
+                {
+                    "name": "validatorString",
+                    "description": ""
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_setupValidation",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 165,
+            "access": "public",
+            "tagname": "",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 170,
+            "description": "Find all elements with the provided class name and setup validations as they were specified",
+            "params": [
+                {
+                    "name": "className",
+                    "description": "Elements with this class name will be validated"
+                },
+                {
+                    "name": "containerId",
+                    "description": "html id for the containing element. Only elements in this container are validated"
+                }
+            ],
+            "access": "public",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "validate",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 179,
+            "description": "Check to see if we should only target elements\nin a specific container.",
+            "itemtype": "property",
+            "name": "containerString",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 190,
+            "description": "Handle all elements, that have been defined in 'availableInputTypes' in the form.\nEach should have its own data declarations for validation. Javascript declarations\nwill be added later.",
+            "todo": [
+                "handle entire form"
+            ],
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 197,
+            "description": "Handle individual elements",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 205,
+            "description": "A trigger has been defined, split the string to see how many",
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 224,
+            "description": "Allow for passing in extra configuration objects",
+            "todo": [
+                "implement the possibility of configuring an adapter"
+            ],
+            "params": [
+                {
+                    "name": "configurationObject",
+                    "description": ""
+                }
+            ],
+            "itemtype": "method",
+            "name": "configure",
+            "return": {
+                "description": "",
+                "type": "*"
+            },
+            "chainable": 1,
+            "class": "Gp.Validators.required",
+            "module": "Validator"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 243,
+            "class": "Gp.Validators.required",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 254,
+            "description": "Object literal containing the possible messages this validator can return",
+            "type": "{Object}",
+            "class": "Gp.Validators.required",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 262,
+            "itemtype": "method",
+            "name": "validate",
+            "access": "public",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "element",
+                    "description": ""
+                }
+            ],
+            "class": "Gp.Validators.required",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 298,
+            "itemtype": "method",
+            "name": "validate",
+            "access": "public",
+            "tagname": "",
+            "class": "Gp.Validators.length",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 304,
+            "itemtype": "property",
+            "name": "isValid",
+            "type": "boolean",
+            "default": "false",
+            "class": "Gp.Validators.length",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 311,
+            "itemtype": "property",
+            "name": "returnObject",
+            "type": "object",
+            "default": "\"{}\"",
+            "class": "Gp.Validators.length",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 318,
+            "itemtype": "property",
+            "name": "value",
+            "type": "String",
+            "class": "Gp.Validators.length",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 352,
+            "itemtype": "method",
+            "name": "validate",
+            "access": "public",
+            "tagname": "",
+            "class": "Gp.Validators.regexp",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 358,
+            "itemtype": "property",
+            "name": "isValid",
+            "type": "boolean",
+            "default": "false",
+            "class": "Gp.Validators.regexp",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 365,
+            "itemtype": "property",
+            "name": "returnObject",
+            "type": "object",
+            "default": "\"{}\"",
+            "class": "Gp.Validators.regexp",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 372,
+            "itemtype": "property",
+            "name": "pattern",
+            "type": "RegExp",
+            "class": "Gp.Validators.regexp",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        },
+        {
+            "file": "src/validator.js",
+            "line": 382,
+            "itemtype": "property",
+            "name": "value",
+            "type": "String",
+            "class": "Gp.Validators.regexp",
+            "module": "Validator",
+            "namespace": "Gp.Validators"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/validator.js:81"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/validator.js:224"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/validator.js:32"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/validator.js:165"
+        },
+        {
+            "message": "Missing item type\nHandle all elements, that have been defined in 'availableInputTypes' in the form.\nEach should have its own data declarations for validation. Javascript declarations\nwill be added later.",
+            "line": " src/validator.js:190"
+        },
+        {
+            "message": "Missing item type\nHandle individual elements",
+            "line": " src/validator.js:197"
+        },
+        {
+            "message": "Missing item type\nA trigger has been defined, split the string to see how many",
+            "line": " src/validator.js:205"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/validator.js:243"
+        },
+        {
+            "message": "Missing item type\nObject literal containing the possible messages this validator can return",
+            "line": " src/validator.js:254"
+        }
+    ]
+}
