@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Gp.Validators.Gp.Validator.html">Gp.Validators.Gp.Validator</a></li>
+            
                 <li><a href="../classes/Gp.Validators.length.html">Gp.Validators.length</a></li>
             
                 <li><a href="../classes/Gp.Validators.regexp.html">Gp.Validators.regexp</a></li>
@@ -116,10 +118,9 @@
  * plugin. Eventually I would like to abstract the need for JQuery so adapters 
  * for other libraries can be added.
  *
+ * @module Validator
  * @todo create adapter system so there is no reliance on just jQuery
  * @todo allow for validator declaration using javascript instead of data attributes
- *
- * @module Validator
  *
  */
 
@@ -130,11 +131,10 @@ var Gp = window.Gp || {};
 
 /**
  * @namespace Gp
- * @module Validator
+ * @class Validator
  */
 Gp.Validator    = (function(){
 
-    // private members
     /**
      * For later use, a list of all the input types we can (or are allowed to) validate
      * @type {Array}
@@ -157,7 +157,9 @@ Gp.Validator    = (function(){
          * @property validatorStringSplitCharacter   
          * @type {string}
          */
-        validatorStringSplitCharacter   = &#x27;&amp;&#x27;;
+        validatorStringSplitCharacter   = &#x27;&amp;&#x27;,
+        
+        valid = true;
 
     /**
      * Parse the validator string to determine which validators should be called
@@ -213,104 +215,153 @@ Gp.Validator    = (function(){
     /**
      * Setup the validators and hook them up to the requested event
      * @param element
-     * @param trigger
      * @param validatorString
      * @private
      * @method _setupValidation
      */
-    function _setupValidation(element, trigger, validatorString)
+    function _setupValidation(element, validatorString)
     {
         var validatorArray   = _parseValidatorString(validatorString);
         element = $(element);
 
 		// Make sure the validation is triggered at the requested moment
-        element.bind(trigger, function(){
+        element.on(&#x27;doValidate&#x27;, function(){
 
-            var argumentObject   = {};
+            var argumentObject   = {},
+                returnValue     = true;
 
             // Loop all requested validations
             for (var i=0; i&lt;validatorArray.length; i++){
                 // Split the string to see what validation is requested and if it has parameters to pass
                 validatorParts  = validatorArray[i].split(&quot;:&quot;);
+
+                // validatorParts[1] == arguments for validator
                 if (validatorParts[1]){
                     argumentObject   = _parseValidatorArgumentString(validatorParts[1])
                 }
+
                 var result;
-                if (_callCustomValidator(validatorParts[0]) &amp;&amp; typeof _callCustomValidator(validatorParts[0]).validate === &#x27;function&#x27;){
+                if (_callCustomValidator(validatorParts[0]) &amp;&amp; 
+                    typeof _callCustomValidator(validatorParts[0]).validate === &#x27;function&#x27;){
+
+                    // Custom validator requested
                     result      = _callCustomValidator(validatorParts[0]).validate(element, argumentObject);
+
                 }else if (Gp.Validators[validatorParts[0]]){
+
+                    // Gp Validator requested
                     result      = Gp.Validators[validatorParts[0]].validate(element, argumentObject);
+
                 }else{
+
+                    // Requested validator not found
                     throw new Error(&#x27;Validator &#x27; + validatorParts[0] + &#x27; not found.&#x27;);
+
                 }
+
                 // Fetch the callback function name
                 var callback    = element.data(&#x27;validator-callback&#x27;);
+
                 // See if it is actually a function
                 if (typeof window[callback] != &#x27;function&#x27;) {
                     throw new Error(&#x27;The defined callback method is not a function&#x27;);
                 }else{
                     window[callback](element, result);
                 }
+
+                if (result.isValid === false){
+                    console.log(&#x27;setting valid to false&#x27;);
+                    returnValue = false;
+                    valid       = false;
+                }else{
+                    console.log(&#x27;element is valid&#x27;);
+                }
             }
+    
+            return returnValue;
         });
+        
     }
 
-    // public members
-    /**
-     * @public
-     */
     return {
 
         /**
-         * Find all elements with the provided class name and setup validations as they were specified
+         * Find all elements with the provided class name and setup validations 
+         * as they were specified
          * @param className Elements with this class name will be validated
          * @param containerId html id for the containing element. Only elements in this container are validated
          * @public
          * @method validate
          */
-        validate    : function(className, containerId)
+        validate    : function(className, containerId, validateFormOnSubmit)
         {
             /**
              * Check to see if we should only target elements
              * in a specific container.
-             * @property containerString 
              */
             var containerString = &#x27;&#x27;;
+     
             if (containerId){
                 containerString = &#x27;#&#x27; + containerId + &#x27; &#x27;;
             }
+     
+            /**
+             * Loop all DOM elements that match validation criteria
+             */
             $(containerString + &#x27;.&#x27; + className).each(function(index, element){
-                if (element.tagName == &#x27;form&#x27;){
-                    /**
-                     * Handle all elements, that have been defined in &#x27;availableInputTypes&#x27; in the form.
-                     * Each should have its own data declarations for validation. Javascript declarations
-                     * will be added later.
-                     * @todo handle entire form
-                     */
-                }else{
+                
+                if (element.tagName === &#x27;FORM&#x27;){
+                    console.log(&#x27;reset valid to true&#x27;);
+                    // Attach on submit handler to validate all elements
+                    $(element).submit(function(e){
+                        var result = true;
+                        valid   = true;
+                        $(element).find(&#x27;.&#x27; + className).each(function(index, element){
+                            result = $(element).trigger(&#x27;doValidate&#x27;);
+                        });
+                        if (!valid){
+                            console.log(&#x27;not valid&#x27;);
+                            e.preventDefault();
+                        }else{
+                            console.log(&#x27;form submitted&#x27;);
+                        }
+                    });
+                } else {
                     /**
                      * Handle individual elements
                      */
-
+                    
                     var triggers = $(element).data(&#x27;validator-trigger&#x27;);
                     if (!triggers){
-                        throw new Error(&#x27;No trigger for element validation, without a trigger validation will not occur.&#x27;);
+                        return false;
+                        //throw new Error(&#x27;No trigger for element validation, without a trigger validation will not occur.&#x27;);
                     }else{
                         /**
                          * A trigger has been defined, split the string to see how many
                          */
                         triggers    = triggers.split(&quot;,&quot;);
                     }
-
+                    
                     // Determine what should be validated
                     var validationInformation   = $(element).data(&#x27;validator&#x27;);
                     if (!validationInformation){
-                        throw new Error(&#x27;No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element&#x27;);
+                        return false;
+                        //throw new Error(&#x27;No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element&#x27;);
                     }
+                    
+                    _setupValidation(element, validationInformation);
 
                     for (var x=0; x&lt;triggers.length; x++){
-                        _setupValidation(element, triggers[x].trim(), validationInformation);
+                        // @todo seperate setting up validation and adding event handlers for the triggers
+                        // We should add validation on the custom doValidate event and trigget that event
+                        // when a requested trigger event is fired. That way the form submit van also use
+                        // the generic doValidate events.
+                        $(element).on(triggers[x].trim(), function(){ 
+                            //_triggerDoValidate(); 
+                            return $(element).trigger(&#x27;doValidate&#x27;);
+                        } );
                     }
+    
                 }
             });
         },
@@ -493,7 +544,142 @@ Gp.Validators   = {
             }
         }
 
-    }
+    },
+
+    zipcode : {
+
+        messages : {
+            notValid    : &quot;Value is not a zipcode&quot;
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : &#x27;zipcode&#x27;
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : &#x27;zipcode&#x27;,
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+
+        }
+    },
+
+    phonenumber : {
+
+        messages : {
+            notValid    : &quot;Value is not a phone number&quot;
+        },
+
+        validate : function(element){
+            return {
+                isValid : true,
+                validator : &#x27;phonenumber&#x27;
+            }
+        }
+    },
+
+    emailaddress : {
+
+        messages : {
+            notValid    : &quot;Value is not a valid email address&quot;
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : &#x27;emailaddress&#x27;
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : &#x27;emailaddress&#x27;,
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+
+        }
+    },
+
+    hostname : {
+
+        messages : {
+            notValid    : &quot;Value is not a valid hostname&quot;
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/
+            }
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : &#x27;hostname&#x27;
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : &#x27;hostname&#x27;,
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+        }
+    },
+
+    iban : {
+
+        messages : {
+            notValid    : &quot;Value is not a valid IBAN&quot;
+        },
+
+        validate : function(element){
+            // https://mxforum.mendix.com/questions/5257/Regex--separated-IBAN
+            settings = {
+                regexp : /[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}/
+//                regexp : /^((NO)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(NO)[0-9A-Z]{13}|(BE)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(BE)[0-9A-Z]{14}|(DK|FO|FI|GL|NL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(DK|FO|FI|GL|NL)[0-9A-Z]{16}|(MK|SI)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(MK|SI)[0-9A-Z]{17}|(BA|EE|KZ|LT|LU|AT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(BA|EE|KZ|LT|LU|AT)[0-9A-Z]{18}|(HR|LI|LV|CH)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{1}|(HR|LI|LV|CH)[0-9A-Z]{19}|(BG|DE|IE|ME|RS|GB)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(BG|DE|IE|ME|RS|GB)[0-9A-Z]{20}|(GI|IL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(GI|IL)[0-9A-Z]{21}|(AD|CZ|SA|RO|SK|ES|SE|TN)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(AD|CZ|SA|RO|SK|ES|SE|TN)[0-9A-Z]{22}|(PT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{1}|(PT)[0-9A-Z]{23}|(IS|TR)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(IS|TR)[0-9A-Z]{24}|(FR|GR|IT|MC|SM)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(FR|GR|IT|MC|SM)[0-9A-Z]{25}|(AL|CY|HU|LB|PL)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}|(AL|CY|HU|LB|PL)[0-9A-Z]{26}|(MU)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{2}|(MU)[0-9A-Z]{28}|(MT)[0-9A-Z]{2}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{4}[ ][0-9A-Z]{3}|(MT)[0-9A-Z]{29})$/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator   : &#x27;hostname&#x27;
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : &#x27;hostname&#x27;,
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+        }
+
+    },
+
 };
 
 

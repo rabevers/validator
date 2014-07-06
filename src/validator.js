@@ -61,7 +61,9 @@ Gp.Validator    = (function(){
          * @property validatorStringSplitCharacter   
          * @type {string}
          */
-        validatorStringSplitCharacter   = '&';
+        validatorStringSplitCharacter   = '&',
+        
+        valid = true;
 
     /**
      * Parse the validator string to determine which validators should be called
@@ -117,51 +119,74 @@ Gp.Validator    = (function(){
     /**
      * Setup the validators and hook them up to the requested event
      * @param element
-     * @param trigger
      * @param validatorString
      * @private
      * @method _setupValidation
      */
-    function _setupValidation(element, trigger, validatorString)
+    function _setupValidation(element, validatorString)
     {
         var validatorArray   = _parseValidatorString(validatorString);
         element = $(element);
 
 		// Make sure the validation is triggered at the requested moment
-        element.bind(trigger, function(){
+        element.on('doValidate', function(){
 
-            var argumentObject   = {};
+            var argumentObject   = {},
+                returnValue     = true;
 
             // Loop all requested validations
             for (var i=0; i<validatorArray.length; i++){
                 // Split the string to see what validation is requested and if it has parameters to pass
                 validatorParts  = validatorArray[i].split(":");
+
+                // validatorParts[1] == arguments for validator
                 if (validatorParts[1]){
                     argumentObject   = _parseValidatorArgumentString(validatorParts[1])
                 }
+
                 var result;
-                if (_callCustomValidator(validatorParts[0]) && typeof _callCustomValidator(validatorParts[0]).validate === 'function'){
+                if (_callCustomValidator(validatorParts[0]) && 
+                    typeof _callCustomValidator(validatorParts[0]).validate === 'function'){
+
+                    // Custom validator requested
                     result      = _callCustomValidator(validatorParts[0]).validate(element, argumentObject);
+
                 }else if (Gp.Validators[validatorParts[0]]){
+
+                    // Gp Validator requested
                     result      = Gp.Validators[validatorParts[0]].validate(element, argumentObject);
+
                 }else{
+
+                    // Requested validator not found
                     throw new Error('Validator ' + validatorParts[0] + ' not found.');
+
                 }
+
                 // Fetch the callback function name
                 var callback    = element.data('validator-callback');
+
                 // See if it is actually a function
                 if (typeof window[callback] != 'function') {
                     throw new Error('The defined callback method is not a function');
                 }else{
                     window[callback](element, result);
                 }
+
+                if (result.isValid === false){
+                    console.log('setting valid to false');
+                    returnValue = false;
+                    valid       = false;
+                }else{
+                    console.log('element is valid');
+                }
             }
+    
+            return returnValue;
         });
+        
     }
 
-    /**
-     * @public
-     */
     return {
 
         /**
@@ -172,12 +197,11 @@ Gp.Validator    = (function(){
          * @public
          * @method validate
          */
-        validate    : function(className, containerId)
+        validate    : function(className, containerId, validateFormOnSubmit)
         {
             /**
              * Check to see if we should only target elements
              * in a specific container.
-             * @property containerString 
              */
             var containerString = '';
      
@@ -189,19 +213,28 @@ Gp.Validator    = (function(){
              * Loop all DOM elements that match validation criteria
              */
             $(containerString + '.' + className).each(function(index, element){
-
-                if (element.tagName == 'form'){
-                    /**
-                     * Handle all elements, that have been defined in 'availableInputTypes' in the form.
-                     * Each should have its own data declarations for validation. Javascript declarations
-                     * will be added later.
-                     * @todo handle entire form
-                     */
-                }else{
+                
+                if (element.tagName === 'FORM'){
+                    console.log('reset valid to true');
+                    // Attach on submit handler to validate all elements
+                    $(element).submit(function(e){
+                        var result = true;
+                        valid   = true;
+                        $(element).find('.' + className).each(function(index, element){
+                            result = $(element).trigger('doValidate');
+                        });
+                        if (!valid){
+                            console.log('not valid');
+                            e.preventDefault();
+                        }else{
+                            console.log('form submitted');
+                        }
+                    });
+                } else {
                     /**
                      * Handle individual elements
                      */
-
+                    
                     var triggers = $(element).data('validator-trigger');
                     if (!triggers){
                         return false;
@@ -212,17 +245,27 @@ Gp.Validator    = (function(){
                          */
                         triggers    = triggers.split(",");
                     }
-
+                    
                     // Determine what should be validated
                     var validationInformation   = $(element).data('validator');
                     if (!validationInformation){
                         return false;
                         //throw new Error('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element');
                     }
+                    
+                    _setupValidation(element, validationInformation);
 
                     for (var x=0; x<triggers.length; x++){
-                        _setupValidation(element, triggers[x].trim(), validationInformation);
+                        // @todo seperate setting up validation and adding event handlers for the triggers
+                        // We should add validation on the custom doValidate event and trigget that event
+                        // when a requested trigger event is fired. That way the form submit van also use
+                        // the generic doValidate events.
+                        $(element).on(triggers[x].trim(), function(){ 
+                            //_triggerDoValidate(); 
+                            return $(element).trigger('doValidate');
+                        } );
                     }
+    
                 }
             });
         },
