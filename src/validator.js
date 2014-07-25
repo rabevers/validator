@@ -161,7 +161,7 @@ Gp.Validator    = (function(){
                     result      = Gp.Validators[validatorParts[0]].validate(element, argumentObject);
 
                 }else{
-
+                    return;
                     // Requested validator not found
                     throw new Error('Validator ' + validatorParts[0] + ' not found.');
 
