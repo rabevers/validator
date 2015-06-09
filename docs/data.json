@@ -41,7 +41,7 @@
             },
             "tag": "module",
             "file": "src/validator.js",
-            "line": 392,
+            "line": 398,
             "author": "Richard A. Bevers <richard.bevers@gmail.com>\nDate: 25-1-14\nTime: 12:45\n\nConcept\nValidate input fields, We should be able to identify a form for which \neach field should be validated or we should be able to validate all \ninput fields with a specific class. Perhaps we can do both at once.\n\nThe validations should be either in html as data-type attributes or \ndeclarative through javascript. html will be step one.\n\nProgrammers should be able to add custom validators just by loading \nthe validator, specifically adding them should not be required (convention \nover configuration).\n\nInvalid values should be handled by programmer specified callback functions \n\nNotes:\nWe will have a dependency for JQuery though we will not create a JQuery \nplugin. Eventually I would like to abstract the need for JQuery so adapters \nfor other libraries can be added.",
             "todo": [
                 "create adapter system so there is no reliance on just jQuery",
@@ -74,7 +74,7 @@
             "module": "Validator",
             "namespace": "Gp.Validators",
             "file": "src/validator.js",
-            "line": 297,
+            "line": 303,
             "description": "Validator to indicate a value is required."
         },
         "Gp.Validators.length": {
@@ -88,7 +88,7 @@
             "module": "Validator",
             "namespace": "Gp.Validators",
             "file": "src/validator.js",
-            "line": 335,
+            "line": 341,
             "description": "Length validator, can check for a minimum length, a maximum length or both.",
             "todo": [
                 "allow for messages to be changed"
@@ -105,7 +105,7 @@
             "module": "Validator",
             "namespace": "Gp.Validators",
             "file": "src/validator.js",
-            "line": 392
+            "line": 398
         }
     },
     "classitems": [
@@ -246,7 +246,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 192,
+            "line": 196,
             "description": "Find all elements with the provided class name and setup validations \nas they were specified",
             "params": [
                 {
@@ -268,7 +268,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 202,
+            "line": 206,
             "description": "Check to see if we should only target elements\nin a specific container.",
             "class": "Gp.Validator",
             "module": "Validator",
@@ -276,7 +276,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 212,
+            "line": 216,
             "description": "Loop all DOM elements that match validation criteria",
             "class": "Gp.Validator",
             "module": "Validator",
@@ -284,7 +284,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 234,
+            "line": 237,
             "description": "Handle individual elements",
             "class": "Gp.Validator",
             "module": "Validator",
@@ -292,7 +292,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 243,
+            "line": 246,
             "description": "A trigger has been defined, split the string to see how many",
             "class": "Gp.Validator",
             "module": "Validator",
@@ -300,7 +300,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 273,
+            "line": 279,
             "description": "Allow for passing in extra configuration objects",
             "todo": [
                 "implement the possibility of configuring an adapter"
@@ -324,14 +324,14 @@
         },
         {
             "file": "src/validator.js",
-            "line": 292,
+            "line": 298,
             "class": "Gp.Validators.Gp.Validator",
             "module": "Validator",
             "namespace": "Gp.Validators"
         },
         {
             "file": "src/validator.js",
-            "line": 303,
+            "line": 309,
             "description": "Object literal containing the possible messages this validator can return",
             "type": "{Object}",
             "class": "Gp.Validators.required",
@@ -340,7 +340,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 311,
+            "line": 317,
             "itemtype": "method",
             "name": "validate",
             "access": "public",
@@ -357,7 +357,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 347,
+            "line": 353,
             "itemtype": "method",
             "name": "validate",
             "access": "public",
@@ -368,7 +368,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 353,
+            "line": 359,
             "itemtype": "property",
             "name": "isValid",
             "type": "boolean",
@@ -379,7 +379,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 360,
+            "line": 366,
             "itemtype": "property",
             "name": "returnObject",
             "type": "object",
@@ -390,7 +390,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 367,
+            "line": 373,
             "itemtype": "property",
             "name": "value",
             "type": "String",
@@ -400,7 +400,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 401,
+            "line": 407,
             "itemtype": "method",
             "name": "validate",
             "access": "public",
@@ -411,7 +411,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 407,
+            "line": 413,
             "itemtype": "property",
             "name": "isValid",
             "type": "boolean",
@@ -422,7 +422,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 414,
+            "line": 420,
             "itemtype": "property",
             "name": "returnObject",
             "type": "object",
@@ -433,7 +433,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 421,
+            "line": 427,
             "itemtype": "property",
             "name": "pattern",
             "type": "RegExp",
@@ -443,7 +443,7 @@
         },
         {
             "file": "src/validator.js",
-            "line": 431,
+            "line": 437,
             "itemtype": "property",
             "name": "value",
             "type": "String",
@@ -459,7 +459,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " src/validator.js:273"
+            "line": " src/validator.js:279"
         },
         {
             "message": "Missing item type",
@@ -467,27 +467,27 @@
         },
         {
             "message": "Missing item type\nCheck to see if we should only target elements\nin a specific container.",
-            "line": " src/validator.js:202"
+            "line": " src/validator.js:206"
         },
         {
             "message": "Missing item type\nLoop all DOM elements that match validation criteria",
-            "line": " src/validator.js:212"
+            "line": " src/validator.js:216"
         },
         {
             "message": "Missing item type\nHandle individual elements",
-            "line": " src/validator.js:234"
+            "line": " src/validator.js:237"
         },
         {
             "message": "Missing item type\nA trigger has been defined, split the string to see how many",
-            "line": " src/validator.js:243"
+            "line": " src/validator.js:246"
         },
         {
             "message": "Missing item type",
-            "line": " src/validator.js:292"
+            "line": " src/validator.js:298"
         },
         {
             "message": "Missing item type\nObject literal containing the possible messages this validator can return",
-            "line": " src/validator.js:303"
+            "line": " src/validator.js:309"
         }
     ]
 }

@@ -125,6 +125,10 @@ Gp.Validator    = (function(){
      */
     function _setupValidation(element, validatorString)
     {
+		if (!validatorString){
+//			console.log(validatorString);
+			return true;
+		}
         var validatorArray   = _parseValidatorString(validatorString);
         element = $(element);
 
@@ -157,7 +161,7 @@ Gp.Validator    = (function(){
                     result      = Gp.Validators[validatorParts[0]].validate(element, argumentObject);
 
                 }else{
-
+                    return;
                     // Requested validator not found
                     throw new Error('Validator ' + validatorParts[0] + ' not found.');
 
@@ -167,18 +171,18 @@ Gp.Validator    = (function(){
                 var callback    = element.data('validator-callback');
 
                 // See if it is actually a function
-                if (typeof window[callback] != 'function') {
+                if (typeof window[callback] !== 'function') {
                     throw new Error('The defined callback method is not a function');
                 }else{
                     window[callback](element, result);
                 }
 
                 if (result.isValid === false){
-                    console.log('setting valid to false');
+//                    console.log('setting valid to false');
                     returnValue = false;
                     valid       = false;
                 }else{
-                    console.log('element is valid');
+//                    console.log('element is valid');
                 }
             }
     
@@ -213,9 +217,7 @@ Gp.Validator    = (function(){
              * Loop all DOM elements that match validation criteria
              */
             $(containerString + '.' + className).each(function(index, element){
-                
                 if (element.tagName === 'FORM'){
-                    console.log('reset valid to true');
                     // Attach on submit handler to validate all elements
                     $(element).submit(function(e){
                         var result = true;
@@ -224,20 +226,21 @@ Gp.Validator    = (function(){
                             result = $(element).trigger('doValidate');
                         });
                         if (!valid){
-                            console.log('not valid');
                             e.preventDefault();
                         }else{
-                            console.log('form submitted');
+//                            e.preventDefault();
+//                            console.log('form submitted');
+//							console.log(valid);
                         }
                     });
                 } else {
                     /**
                      * Handle individual elements
                      */
-                    
                     var triggers = $(element).data('validator-trigger');
                     if (!triggers){
-                        return false;
+//                        console.log('No trigger for element validation, without a trigger validation will not occur.');
+//						console.log(element);
                         //throw new Error('No trigger for element validation, without a trigger validation will not occur.');
                     }else{
                         /**
@@ -249,22 +252,25 @@ Gp.Validator    = (function(){
                     // Determine what should be validated
                     var validationInformation   = $(element).data('validator');
                     if (!validationInformation){
-                        return false;
+//                        console.log('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element ');
+//						console.log(element);
                         //throw new Error('No validation information found. Either the data-validator tag is missing or an incorrect class was assigned to this element');
                     }
                     
                     _setupValidation(element, validationInformation);
 
-                    for (var x=0; x<triggers.length; x++){
-                        // @todo seperate setting up validation and adding event handlers for the triggers
-                        // We should add validation on the custom doValidate event and trigget that event
-                        // when a requested trigger event is fired. That way the form submit van also use
-                        // the generic doValidate events.
-                        $(element).on(triggers[x].trim(), function(){ 
-                            //_triggerDoValidate(); 
-                            return $(element).trigger('doValidate');
-                        } );
-                    }
+					if (triggers){
+						for (var x=0; x<triggers.length; x++){
+							// @todo seperate setting up validation and adding event handlers for the triggers
+							// We should add validation on the custom doValidate event and trigget that event
+							// when a requested trigger event is fired. That way the form submit van also use
+							// the generic doValidate events.
+							$(element).on(triggers[x].trim(), function(){ 
+								//_triggerDoValidate(); 
+								return $(element).trigger('doValidate');
+							} );
+						}
+					}
     
                 }
             });
@@ -450,16 +456,15 @@ Gp.Validators   = {
 
     },
 
-    digits : {
-
-        messages : {
-            notValid    : "Value should be only digits"
-        },
-
-        validate : function(element){
-            settings = {
-                regexp : /^[0-9]+&/
-            }
+	digits : {
+		messages : {
+            notValid    : "Value should contain only digits"
+		},
+				
+		validate : function(element){
+			settings = {
+				regexp : /^[0-9]+$/
+			}
 
             var result  = Gp.Validators.regexp.validate(element, settings);
             if (result.isValid === true){
@@ -520,6 +525,20 @@ Gp.Validators   = {
             return {
                 isValid : true,
                 validator : 'phonenumber'
+            }
+        }
+    },
+
+    uri : {
+
+        messages : {
+            notValid    : "Value is not a uri"
+        },
+
+        validate : function(element){
+            return {
+                isValid : true,
+                validator : 'uri'
             }
         }
     },
