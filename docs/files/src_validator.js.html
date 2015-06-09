@@ -546,6 +546,36 @@ Gp.Validators   = {
 
     },
 
+    digits : {
+
+        messages : {
+            notValid    : &quot;Value should be only digits&quot;
+        },
+
+        validate : function(element){
+            settings = {
+                regexp : /^[0-9]+&amp;/
+            }
+
+            var result  = Gp.Validators.regexp.validate(element, settings);
+            if (result.isValid === true){
+                return {
+                    isValid : true,
+                    validator : &#x27;digits&#x27;
+                }
+            }else{
+                return {
+                    isValid : false,
+                    validator : &#x27;digits&#x27;,
+                    messages : {
+                        inValid : this.messages.notValid
+                    }
+                }
+            }
+        }
+
+    },
+
     zipcode : {
 
         messages : {
