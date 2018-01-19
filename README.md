@@ -1,11 +1,11 @@
-#validator
+# validator
 _Validator_ is a client-side javascript form validation system. It aims to have the programmer write as little as possible and use html data attributes to define the various validations.
 
 So far a javascript function is only used to handle the actual displaying of validation results. I say validation results and not errors since you could display information on success as well.
 
 Please keep in mind that _Validator_ is on **beta status**. It has not yet been extensively tested.
 
-##Usage
+## Usage
 
 In order to use the validator you will need to include the javascript file in your page. the build directory contains a minified version of the file. The src directory contains the original including comments. Have a look if you are interested in the workings.
 
